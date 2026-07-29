@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+output/*.xml
+odt/
+setup.exe
+.idea/
+.vscode/
+dist/
+build/
+*.spec

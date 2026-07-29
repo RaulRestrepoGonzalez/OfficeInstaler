@@ -5,7 +5,12 @@ import sys
 def _get_base_dir() -> str:
     if getattr(sys, "frozen", False):
         return os.path.dirname(sys.executable)
-    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        __compiled__
+    except NameError:
+        return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    else:
+        return os.path.dirname(sys.executable)
 
 
 BASE_DIR = _get_base_dir()

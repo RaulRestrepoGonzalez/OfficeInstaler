@@ -1,43 +1,50 @@
 import os
 import sys
+import shutil
 import subprocess
 
 ICON_PATH = os.path.join("assets", "icons", "app.ico")
-VERSION_FILE = "version_info.rc"
 OUTPUT_NAME = "OfficeInstaller"
 DIST_DIR = "dist"
-BUILD_DIR = "build"
+
+# --- Limpiar outputs anteriores ---
+if os.path.isdir(DIST_DIR):
+    for entry in os.listdir(DIST_DIR):
+        path = os.path.join(DIST_DIR, entry)
+        if entry.endswith(".build") or entry.endswith(".dist") or entry.endswith(".onefile-build"):
+            shutil.rmtree(path, ignore_errors=True)
 
 args = [
-    sys.executable, "-m", "PyInstaller",
+    sys.executable, "-m", "nuitka",
     "--onefile",
-    "--windowed",
-    "--clean",
-    "--noconfirm",
-    f"--name={OUTPUT_NAME}",
-    f"--distpath={DIST_DIR}",
-    f"--workpath={BUILD_DIR}",
-    f"--icon={ICON_PATH}",
-    f"--version-file={VERSION_FILE}",
-    "--add-data", f"assets{os.pathsep}assets",
+    "--plugin-enable=tk-inter",
+    "--windows-console-mode=disable",
+    f"--windows-icon-from-ico={ICON_PATH}",
+    f"--output-dir={DIST_DIR}",
+    f"--output-filename={OUTPUT_NAME}.exe",
+    f"--file-description=Office Installer Facilitator",
+    f"--file-version=1.0.0.0",
+    f"--product-version=1.0.0.0",
+    f"--product-name=Office Installer Facilitator",
+    f"--company-name=Office Installer Facilitator",
+    "--copyright=Freeware",
+    "--include-data-dir=assets=assets",
+    "--zig",
+    "--assume-yes-for-downloads",
     "main.py",
 ]
 
-print("Ejecutando PyInstaller...")
+print("=== Nuitka Build (onefile) ===")
+print("Compilando Office Installer Facilitator a código nativo...")
+print()
+
 subprocess.run(args, check=True)
 
 exe_path = os.path.join(DIST_DIR, f"{OUTPUT_NAME}.exe")
 if os.path.isfile(exe_path):
     size_mb = os.path.getsize(exe_path) / (1024 * 1024)
-    print(f"\n--- EXE generado: {exe_path} ({size_mb:.1f} MB) ---")
-    print("Portable (--onefile) con metadatos de versión.")
-
-    print("\n--- NOTA sobre antivirus ---")
-    print("Si Windows Defender u otros antivirus detectan el .exe como")
-    print("falso positivo, puedes:")
-    print("1. Reportarlo en https://www.microsoft.com/en-us/wdsi/filesubmission")
-    print("2. Firmar el ejecutable con un certificado de código (recomendado)")
-    print("3. O añadirlo a exclusiones de Windows Defender")
+    print(f"\n--- EXE nativo generado: {exe_path} ({size_mb:.1f} MB) ---")
+    print("Un solo archivo portátil (onefile) - sin dependencias")
 else:
     print(f"\nERROR: No se encontró el exe en {exe_path}")
     sys.exit(1)

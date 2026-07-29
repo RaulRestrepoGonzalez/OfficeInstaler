@@ -113,6 +113,23 @@ portátil que no requiere Python ni dependencias.
 python -m pytest tests/
 ```
 
+## Antivirus y falsos positivos
+
+Al empaquetar con PyInstaller, algunos antivirus pueden detectar el `.exe`
+como falso positivo. Esto es común en ejecutables creados con empaquetadores
+de Python.
+
+**Para evitarlo:**
+
+1. **Firma el ejecutable** (recomendado) – Un certificado de firma de código
+   (code signing) elimina los falsos positivos. Costo aprox. $200-300/año.
+2. **Reporta el falso positivo** a Microsoft:
+   https://www.microsoft.com/en-us/wdsi/filesubmission
+3. **Añade una exclusión** en Windows Defender por el momento.
+
+El ejecutable ya incluye metadatos de versión (compañía, descripción, versión)
+para reducir detecciones heurísticas.
+
 ## Tecnologías
 
 - Python 3.14+

@@ -1,4 +1,0 @@
-2026-07-29 15:29:57,615 [ODT] Ejecutando: C:\Users\VICTUS\Source\OfficeInstaler\odt\setup.exe /configure C:\Users\VICTUS\Source\OfficeInstaler\output\configuration.xml
-2026-07-29 15:29:57,617 [ODT] ¿Es admin? False
-2026-07-29 15:29:57,617 [ODT] Solicitando elevación via UAC...
-2026-07-29 15:29:59,127 [ODT] ShellExecuteW devolvió: 42

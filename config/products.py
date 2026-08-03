@@ -50,11 +50,50 @@ PRODUCTS = {
     },
 }
 
-# Aplicaciones individuales que se pueden excluir (ExcludeApp) del paquete.
-EXCLUDABLE_APPS = [
-    "Access", "Excel", "Outlook", "PowerPoint", "Publisher",
-    "Word", "OneNote", "OneDrive", "Teams", "Groove", "Lync",
-]
+# Aplicaciones individuales disponibles por producto (ID ODT : lista de apps).
+# Teams solo viene incluido en Microsoft 365 Apps; las ediciones de volumen
+# (LTSC/2019/2016) no lo incluyen. Access/Publisher solo en ProPlus y O365 Pro.
+APPS_BY_PRODUCT_ID = {
+    "O365ProPlusRetail": [
+        "Access", "Excel", "OneNote", "Outlook", "PowerPoint", "Publisher",
+        "Word", "Teams", "OneDrive", "Groove", "Lync",
+    ],
+    "O365BusinessRetail": [
+        "Excel", "OneNote", "Outlook", "PowerPoint", "Word",
+        "Teams", "OneDrive", "Lync",
+    ],
+    "ProPlus2024Volume": [
+        "Access", "Excel", "OneNote", "Outlook", "PowerPoint", "Publisher",
+        "Word", "OneDrive", "Groove", "Lync",
+    ],
+    "Standard2024Volume": [
+        "Excel", "OneNote", "Outlook", "PowerPoint", "Word", "OneDrive", "Lync",
+    ],
+    "ProPlus2021Volume": [
+        "Access", "Excel", "OneNote", "Outlook", "PowerPoint", "Publisher",
+        "Word", "OneDrive", "Groove", "Lync",
+    ],
+    "Standard2021Volume": [
+        "Excel", "OneNote", "Outlook", "PowerPoint", "Word", "OneDrive", "Lync",
+    ],
+    "ProPlus2019Volume": [
+        "Access", "Excel", "OneNote", "Outlook", "PowerPoint", "Publisher",
+        "Word", "OneDrive", "Groove", "Lync",
+    ],
+    "Standard2019Volume": [
+        "Excel", "OneNote", "Outlook", "PowerPoint", "Word", "OneDrive", "Lync",
+    ],
+    "ProPlus2016Volume": [
+        "Access", "Excel", "OneNote", "Outlook", "PowerPoint", "Publisher",
+        "Word", "OneDrive", "Groove", "Lync",
+    ],
+    "Standard2016Volume": [
+        "Excel", "OneNote", "Outlook", "PowerPoint", "Word", "OneDrive", "Lync",
+    ],
+}
+
+# Todas las apps del catálogo (unión) para inicializar el estado de la UI.
+ALL_APPS = sorted({app for apps in APPS_BY_PRODUCT_ID.values() for app in apps})
 
 # Idiomas de instalación disponibles (código ODT : nombre visible).
 LANGUAGES = {

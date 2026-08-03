@@ -9,7 +9,7 @@ import os
 import customtkinter as ctk
 from tkinter import messagebox
 
-from config.products import PRODUCTS, LANGUAGES, EXCLUDABLE_APPS
+from config.products import PRODUCTS, LANGUAGES, APPS_BY_PRODUCT_ID, ALL_APPS
 from config.settings import ODT_PATH_DEFAULT, ODT_DIR, DEFAULT_DOWNLOAD_DIR, OUTPUT_DIR
 from core.odt_config_builder import build_configuration_xml
 from core.odt_runner import save_configuration, run_odt, find_odt, ODTNotFoundError, ODTExecutionError
@@ -45,7 +45,7 @@ class OfficeInstallerApp(ctk.CTk):
         self.language_var = ctk.StringVar(value="Español")
         self.odt_path_var = ctk.StringVar(value=ODT_PATH_DEFAULT)
         self.download_path_var = ctk.StringVar(value=DEFAULT_DOWNLOAD_DIR)
-        self.exclude_vars = {app: ctk.BooleanVar(value=False) for app in EXCLUDABLE_APPS}
+        self.include_vars = {app: ctk.BooleanVar(value=True) for app in ALL_APPS}
         self.download_row = None  # se crea dentro de product_view
 
         self._build_topbar()
@@ -129,7 +129,8 @@ class OfficeInstallerApp(ctk.CTk):
         product_id = PRODUCTS[family]["products"][edition_name]
         channel = self.channel_vars[family].get()
         language_code = LANGUAGES[self.language_var.get()]
-        excluded_apps = [app for app, v in self.exclude_vars.items() if v.get()]
+        available_apps = APPS_BY_PRODUCT_ID[product_id]
+        excluded_apps = [app for app in available_apps if not self.include_vars[app].get()]
 
         return {
             "product_id": product_id,

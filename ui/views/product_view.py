@@ -7,7 +7,7 @@ cada vez que el usuario cambia de producto en la barra lateral.
 import customtkinter as ctk
 from tkinter import filedialog
 
-from config.products import PRODUCTS, LANGUAGES, EXCLUDABLE_APPS
+from config.products import PRODUCTS, LANGUAGES, APPS_BY_PRODUCT_ID
 from ui.components.card import Card
 from ui import theme
 
@@ -35,7 +35,8 @@ def render_product_view(content_frame, state, on_preview, on_install):
         ctk.CTkRadioButton(
             radio_wrap, text=edition, variable=state.edition_vars[family],
             value=edition, fg_color=theme.COLOR_BLUE, hover_color=theme.COLOR_BLUE_HOVER,
-            font=theme.FONT_BODY
+            font=theme.FONT_BODY,
+            command=lambda: render_product_view(content_frame, state, on_preview, on_install)
         ).pack(anchor="w", pady=4)
 
     ctk.CTkLabel(card_edition, text="Canal de actualización", font=theme.FONT_BODY,
@@ -88,16 +89,48 @@ def render_product_view(content_frame, state, on_preview, on_install):
     ctk.CTkEntry(state.download_row, textvariable=state.download_path_var, width=400).pack(anchor="w", pady=(2, 0))
     state.toggle_download_path()
 
-    # --- Card: excluir aplicaciones ---
-    card_apps = Card(content_frame, title="Excluir aplicaciones (opcional)")
+    # --- Card: aplicaciones a instalar ---
+    edition_name = state.edition_vars[family].get()
+    product_id = data["products"][edition_name]
+    available_apps = APPS_BY_PRODUCT_ID[product_id]
+
+    card_apps = Card(content_frame, title="Aplicaciones a instalar")
     card_apps.pack(fill="x", pady=(0, 16))
+
+    def select_all():
+        for app in available_apps:
+            state.include_vars[app].set(True)
+
+    def select_none():
+        for app in available_apps:
+            state.include_vars[app].set(False)
+
+    select_row = ctk.CTkFrame(card_apps, fg_color="transparent")
+    select_row.pack(fill="x", padx=16, pady=(6, 0))
+    ctk.CTkButton(
+        select_row, text="Seleccionar todas", width=130, height=26, fg_color=theme.COLOR_SURFACE,
+        text_color=theme.COLOR_BLUE, border_width=1, border_color=theme.COLOR_BORDER,
+        hover_color=theme.COLOR_SIDEBAR_HOVER, font=theme.FONT_CAPTION, command=select_all
+    ).pack(side="left")
+    ctk.CTkButton(
+        select_row, text="Quitar todas", width=130, height=26, fg_color=theme.COLOR_SURFACE,
+        text_color=theme.COLOR_BLUE, border_width=1, border_color=theme.COLOR_BORDER,
+        hover_color=theme.COLOR_SIDEBAR_HOVER, font=theme.FONT_CAPTION, command=select_none
+    ).pack(side="left", padx=(8, 0))
+
     apps_grid = ctk.CTkFrame(card_apps, fg_color="transparent")
-    apps_grid.pack(fill="x", padx=16, pady=(0, 16))
-    for i, app in enumerate(EXCLUDABLE_APPS):
+    apps_grid.pack(fill="x", padx=16, pady=(4, 10))
+    for i, app in enumerate(available_apps):
         ctk.CTkCheckBox(
-            apps_grid, text=app, variable=state.exclude_vars[app],
+            apps_grid, text=app, variable=state.include_vars[app],
             fg_color=theme.COLOR_BLUE, hover_color=theme.COLOR_BLUE_HOVER, font=theme.FONT_BODY
         ).grid(row=i // 4, column=i % 4, sticky="w", padx=10, pady=6)
+
+    ctk.CTkLabel(
+        card_apps, text="Marca las aplicaciones que quieres instalar. "
+                        "Las desmarcadas se excluirán de la instalación.",
+        font=theme.FONT_CAPTION, text_color=theme.COLOR_TEXT_SECONDARY, anchor="w"
+    ).pack(fill="x", padx=16, pady=(0, 10))
 
     # --- Card: ruta del ODT ---
     card_odt = Card(content_frame, title="Ubicación del Office Deployment Tool")

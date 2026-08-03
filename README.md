@@ -12,6 +12,7 @@ usando el **Office Deployment Tool (ODT) oficial de Microsoft**.
 
 - Interfaz oscura tono violeta con customtkinter
 - Catálogo completo de productos: Microsoft 365, LTSC 2024/2021, 2019, 2016
+- **Selección de apps a instalar** (marca las que quieras; el resto se excluye)
 - **Auto-descarga del ODT** desde Microsoft si no está presente
 - Extracción del ODT sin necesidad de permisos de administrador
 - Ejecución elevada automática (vía UAC) para la instalación de Office
